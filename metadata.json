@@ -1,0 +1,9 @@
+{
+  "name": "DermaLife AI",
+  "description": "An advanced, multimodal dermatological health engine that correlates visual data with biometrics and patient history for holistic skin analysis.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone",
+    "geolocation"
+  ]
+}
