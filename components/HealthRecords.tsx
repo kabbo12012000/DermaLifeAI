@@ -1,6 +1,6 @@
 import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
-import { Download, FileText } from 'lucide-react';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, LineChart, Line } from 'recharts';
+import { Download, FileText, TrendingUp, Activity } from 'lucide-react';
 
 const RANGE_DATA = [
   { day: 'Mon', min: 60, max: 90 },
@@ -13,76 +13,125 @@ const RANGE_DATA = [
 ];
 
 const PRESCRIPTIONS = [
-  { date: '2023-10-12', doctor: 'Dr. Sarah Smith', diagnosis: 'Eczema', meds: 'Hydrocortisone', status: 'Active' },
-  { date: '2023-09-05', doctor: 'Dr. John Doe', diagnosis: 'Acne Vulgaris', meds: 'Doxycycline', status: 'Completed' },
-  { date: '2023-06-15', doctor: 'Dr. Emily Chen', diagnosis: 'Tinea Corporis', meds: 'Terbinafine', status: 'Completed' },
+  { date: 'Oct 12', doctor: 'Dr. Smith', diagnosis: 'Eczema', meds: 'Hydrocortisone', status: 'Active', trend: [30, 40, 35, 50, 45, 60, 55] },
+  { date: 'Sep 05', doctor: 'Dr. Doe', diagnosis: 'Acne', meds: 'Doxycycline', status: 'Completed', trend: [60, 55, 50, 40, 30, 25, 20] },
+  { date: 'Jun 15', doctor: 'Dr. Chen', diagnosis: 'Tinea', meds: 'Terbinafine', status: 'Completed', trend: [40, 45, 40, 45, 40, 45, 40] },
 ];
 
 export const HealthRecords: React.FC = () => {
   return (
-    <div className="animate-fade-in space-y-8 pb-20 md:pb-0">
-      <h2 className="text-2xl font-bold text-slate-900">Health Records</h2>
+    <div className="animate-fade-in space-y-8 pb-24 md:pb-0">
+      <div className="flex items-center justify-between">
+         <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Health Records</h2>
+         <button className="flex items-center space-x-2 bg-white border border-slate-200 px-4 py-2 rounded-xl text-sm font-bold text-slate-700 hover:bg-slate-50">
+            <Download size={16} />
+            <span>Export All</span>
+         </button>
+      </div>
 
-      {/* Heart Rate Range Chart */}
-      <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-        <h3 className="font-bold text-slate-800 mb-6">Weekly Heart Rate Range (Min/Max)</h3>
-        <div className="h-64 w-full">
-           <ResponsiveContainer width="100%" height="100%">
-             <BarChart data={RANGE_DATA}>
-               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-               <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{fill: '#64748b'}} />
-               <YAxis axisLine={false} tickLine={false} tick={{fill: '#64748b'}} domain={[40, 120]} />
-               <Tooltip 
-                 cursor={{fill: '#f1f5f9'}}
-                 contentStyle={{borderRadius: '8px', border: 'none'}}
-               />
-               <Bar dataKey="max" fill="#3b82f6" radius={[4, 4, 0, 0]} barSize={20} name="Max HR" />
-               <Bar dataKey="min" fill="#93c5fd" radius={[4, 4, 0, 0]} barSize={20} name="Min HR" />
-             </BarChart>
-           </ResponsiveContainer>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Main Stats Chart */}
+        <div className="lg:col-span-2 bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100">
+          <h3 className="font-bold text-slate-800 mb-8 flex items-center">
+             <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center mr-3">
+               <Activity size={18} />
+             </div>
+             Weekly Vitals Range
+          </h3>
+          <div className="h-64 w-full">
+             <ResponsiveContainer width="100%" height="100%">
+               <BarChart data={RANGE_DATA} barGap={0}>
+                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                 <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12, fontWeight: 600}} dy={10} />
+                 <YAxis axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}} domain={[40, 120]} />
+                 <Tooltip 
+                   cursor={{fill: '#f8fafc'}}
+                   contentStyle={{borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.05)'}}
+                 />
+                 <Bar dataKey="max" fill="#3b82f6" radius={[4, 4, 0, 0]} barSize={12} name="Max" />
+                 <Bar dataKey="min" fill="#cbd5e1" radius={[4, 4, 0, 0]} barSize={12} name="Min" />
+               </BarChart>
+             </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Quick Summary / Highlights */}
+        <div className="bg-slate-900 rounded-[2rem] p-8 text-white flex flex-col justify-between shadow-xl">
+           <div>
+             <h3 className="font-bold text-lg mb-1">Wellness Score</h3>
+             <p className="text-slate-400 text-sm">Based on recent adherence.</p>
+           </div>
+           
+           <div className="flex items-center justify-center py-8">
+              <div className="relative w-32 h-32 flex items-center justify-center">
+                 <svg className="w-full h-full transform -rotate-90">
+                   <circle cx="64" cy="64" r="56" stroke="#1e293b" strokeWidth="8" fill="none" />
+                   <circle cx="64" cy="64" r="56" stroke="#3b82f6" strokeWidth="8" fill="none" strokeDasharray="351" strokeDashoffset="35" strokeLinecap="round" />
+                 </svg>
+                 <span className="absolute text-3xl font-bold">92</span>
+              </div>
+           </div>
+
+           <div className="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
+             <div className="flex justify-between items-center mb-2">
+               <span className="text-xs font-bold text-slate-300 uppercase">Trend</span>
+               <TrendingUp size={14} className="text-green-400" />
+             </div>
+             <p className="text-sm font-medium">Your vitals have improved by 5% this week.</p>
+           </div>
         </div>
       </div>
 
-      {/* Prescription Table */}
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-        <div className="p-6 border-b border-slate-100">
-           <h3 className="font-bold text-slate-800">Prescription History</h3>
+      {/* Modern List View with Sparklines */}
+      <div className="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
+        <div className="p-8 border-b border-slate-50 flex items-center justify-between">
+           <h3 className="font-bold text-slate-800 text-lg">Recent Consultations</h3>
+           <div className="flex space-x-2">
+             <span className="w-2 h-2 rounded-full bg-orange-400"></span>
+             <span className="w-2 h-2 rounded-full bg-blue-400"></span>
+             <span className="w-2 h-2 rounded-full bg-slate-300"></span>
+           </div>
         </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-left">
-            <thead className="bg-slate-50 text-slate-500 text-xs uppercase font-semibold">
-              <tr>
-                <th className="p-4">Date</th>
-                <th className="p-4">Doctor</th>
-                <th className="p-4">Diagnosis</th>
-                <th className="p-4">Prescription</th>
-                <th className="p-4">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {PRESCRIPTIONS.map((rx, i) => (
-                <tr key={i} className="hover:bg-slate-50 transition-colors">
-                  <td className="p-4 text-sm font-medium text-slate-900">{rx.date}</td>
-                  <td className="p-4 text-sm text-slate-600">{rx.doctor}</td>
-                  <td className="p-4">
-                     <span className={`text-xs px-2 py-1 rounded-full font-semibold ${
-                       rx.diagnosis === 'Eczema' ? 'bg-orange-100 text-orange-700' :
-                       rx.diagnosis === 'Acne Vulgaris' ? 'bg-red-100 text-red-700' :
-                       'bg-blue-100 text-blue-700'
-                     }`}>
-                       {rx.diagnosis}
-                     </span>
-                  </td>
-                  <td className="p-4 text-sm text-slate-600">{rx.meds}</td>
-                  <td className="p-4">
-                    <button className="text-blue-600 hover:text-blue-800 p-2 rounded-lg hover:bg-blue-50 transition-colors">
-                       <Download size={18} />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        
+        <div className="divide-y divide-slate-50">
+          {PRESCRIPTIONS.map((rx, i) => (
+            <div key={i} className="p-6 hover:bg-slate-50/50 transition-colors flex flex-col md:flex-row items-center justify-between group">
+               {/* Left: Info */}
+               <div className="flex items-center w-full md:w-1/3 mb-4 md:mb-0">
+                  <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mr-4 font-bold text-xs flex-shrink-0">
+                    {rx.date.split(' ')[0]}
+                    <br/>
+                    {rx.date.split(' ')[1]}
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-slate-800">{rx.diagnosis}</h4>
+                    <p className="text-sm text-slate-500">{rx.doctor}</p>
+                  </div>
+               </div>
+
+               {/* Middle: Sparkline (The "Trend") */}
+               <div className="w-full md:w-1/3 h-12 mb-4 md:mb-0 px-4 opacity-50 group-hover:opacity-100 transition-opacity">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={rx.trend.map((val, idx) => ({ val, idx }))}>
+                      <Line type="monotone" dataKey="val" stroke={i === 0 ? '#f97316' : '#3b82f6'} strokeWidth={2} dot={false} />
+                    </LineChart>
+                  </ResponsiveContainer>
+               </div>
+
+               {/* Right: Status & Action */}
+               <div className="w-full md:w-1/3 flex items-center justify-between md:justify-end">
+                  <span className={`text-xs px-3 py-1 rounded-full font-bold mr-6 ${
+                     rx.status === 'Active' ? 'bg-orange-50 text-orange-600 border border-orange-100' : 'bg-green-50 text-green-600 border border-green-100'
+                  }`}>
+                    {rx.status}
+                  </span>
+                  
+                  <button className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:text-blue-600 hover:border-blue-200 transition-colors bg-white">
+                     <FileText size={14} />
+                  </button>
+               </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
